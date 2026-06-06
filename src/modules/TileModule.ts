@@ -1,0 +1,136 @@
+import { uintCV } from '@stacks/transactions'
+import type { ReadClient } from '../client/ReadClient'
+import type { WriteClient } from '../client/WriteClient'
+import type { Tile, TxResult, GridWarConfig } from '../core/types'
+import { GridWarError, GridWarErrorCode } from '../core/errors'
+import { MAP_SIZE, CAPTURE_COST_MICROSTX, DEFAULT_CONTRACT_NAMES } from '../core/constants'
+
+export class TileModule {
+  private contractAddress: string
+  private registryName: string
+
+  constructor(
+    private read: ReadClient,
+    private write: WriteClient,
+    config: GridWarConfig
+  ) {
+    this.contractAddress = config.contractAddress
+    this.registryName = config.tileRegistryName ?? DEFAULT_CONTRACT_NAMES.tileRegistry
+  }
+
+  // Read: get tile data at (x, y)
+  async get(x: number, y: number): Promise<Tile> {
+    this.validateCoords(x, y)
+    const result = await this.read.call(
+      this.contractAddress,
+      this.registryName,
+      'get-tile',
+      [uintCV(x), uintCV(y)]
+    )
+    return this.parseTile(result)
+  }
+
+  // Read: get tile owner address
+  async getOwner(x: number, y: number): Promise<string> {
+    const tile = await this.get(x, y)
+    return tile.owner
+  }
+
+  // Read: check if tile is owned
+  async isOwned(x: number, y: number): Promise<boolean> {
+    const tile = await this.get(x, y)
+    return tile.isOwned
+  }
+
+  // Write: capture an unowned tile
+  async capture(x: number, y: number): Promise<TxResult> {
+    this.validateCoords(x, y)
+    return this.write.call(
+      this.contractAddress,
+      this.registryName,
+      'capture-tile',
+      [uintCV(x), uintCV(y)]
+    )
+  }
+
+  // Write: attack enemy tile
+  async attack(x: number, y: number): Promise<TxResult> {
+    this.validateCoords(x, y)
+    const engineName = this.registryName.replace('tile-registry', 'game-engine')
+    return this.write.call(
+      this.contractAddress,
+      engineName,
+      'attack-tile',
+      [uintCV(x), uintCV(y)]
+    )
+  }
+
+  // Write: harvest resources from owned tile
+  async harvest(x: number, y: number): Promise<TxResult> {
+    this.validateCoords(x, y)
+    const engineName = this.registryName.replace('tile-registry', 'game-engine')
+    return this.write.call(
+      this.contractAddress,
+      engineName,
+      'harvest-resource',
+      [uintCV(x), uintCV(y)]
+    )
+  }
+
+  // Write: upgrade owned tile
+  async upgrade(x: number, y: number): Promise<TxResult> {
+    this.validateCoords(x, y)
+    const engineName = this.registryName.replace('tile-registry', 'game-engine')
+    return this.write.call(
+      this.contractAddress,
+      engineName,
+      'upgrade-tile',
+      [uintCV(x), uintCV(y)]
+    )
+  }
+
+  // Calculate costs
+  calculateAttackCost(level: number): bigint {
+    return CAPTURE_COST_MICROSTX * BigInt(level)
+  }
+
+  calculateUpgradeCost(level: number): bigint {
+    return CAPTURE_COST_MICROSTX * BigInt(level) * 2n
+  }
+
+  calculateHarvestAmount(level: number, elapsedBlocks: number): bigint {
+    const periods = Math.floor(elapsedBlocks / 10)
+    return BigInt(periods * level * 10)
+  }
+
+  private validateCoords(x: number, y: number) {
+    if (x < 0 || y < 0 || x >= MAP_SIZE || y >= MAP_SIZE) {
+      throw new GridWarError(
+        GridWarErrorCode.INVALID_COORDINATES,
+        `Coordinates (${x}, ${y}) are out of bounds. Max is ${MAP_SIZE - 1}.`
+      )
+    }
+  }
+
+  private parseTile(raw: any): Tile {
+    if (!raw) {
+      return {
+        owner: '',
+        level: 0,
+        resources: 0n,
+        lastHarvest: 0,
+        capturedAt: 0,
+        isOwned: false,
+      }
+    }
+    const owner = raw?.owner ?? ''
+    return {
+      owner,
+      level: Number(raw?.level ?? 0),
+      resources: BigInt(raw?.resources ?? 0),
+      lastHarvest: Number(raw?.['last-harvest'] ?? 0),
+      capturedAt: Number(raw?.['captured-at'] ?? 0),
+      isOwned: owner !== '' && owner !== 'none',
+    }
+  }
+}

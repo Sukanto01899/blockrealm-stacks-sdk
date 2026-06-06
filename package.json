@@ -1,0 +1,49 @@
+{
+  "name": "@blockrealm/stacks-sdk",
+  "version": "0.1.0",
+  "description": "Build on-chain territory games on Stacks using GridWar contracts",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "keywords": ["stacks", "blockchain", "game", "sdk", "clarity", "bitcoin"],
+  "license": "MIT",
+  "author": "Sukanto01899",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sukanto01899/blockrealm-stacks-sdk.git"
+  },
+  "homepage": "https://github.com/Sukanto01899/blockrealm-stacks-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/Sukanto01899/blockrealm-stacks-sdk/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@stacks/connect": "^7.10.0",
+    "@stacks/network": "^6.13.0",
+    "@stacks/transactions": "^6.12.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "@stacks/connect": ">=7.0.0"
+  }
+}
