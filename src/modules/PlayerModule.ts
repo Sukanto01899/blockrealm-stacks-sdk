@@ -39,6 +39,12 @@ export class PlayerModule {
     return stats.totalResources
   }
 
+  // Read: fetch stats and compute the score in one call.
+  async getScore(address: string): Promise<number> {
+    const stats = await this.getStats(address)
+    return this.calculateScore(stats)
+  }
+
   calculateScore(stats: PlayerStats): number {
     return stats.tileCount * 100 + Number(stats.totalResources)
   }

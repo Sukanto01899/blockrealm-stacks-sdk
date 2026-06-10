@@ -78,6 +78,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getStats(address)` | `Promise<PlayerStats>` | Tile count + total resources |
 | `getTileCount(address)` | `Promise<number>` | Number of tiles owned |
 | `getTotalResources(address)` | `Promise<bigint>` | Total resources harvested |
+| `getScore(address)` | `Promise<number>` | Fetch stats + compute score in one call |
 | `calculateScore(stats)` | `number` | `tileCount * 100 + resources` |
 
 ### `sdk.leaderboard`
