@@ -63,6 +63,8 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getRegion(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | Every tile in the rectangle, each tagged with `x`/`y` |
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
+| `canCapture(x, y)` | `Promise<boolean>` | Whether the tile is capturable (unowned) |
+| `canAttack(x, y, self?)` | `Promise<boolean>` | Whether the tile is attackable (owned by another); pass `self` to exclude your own |
 | `capture(x, y)` | `Promise<TxResult>` | Capture an unowned tile |
 | `attack(x, y)` | `Promise<TxResult>` | Attack an enemy tile |
 | `harvest(x, y)` | `Promise<TxResult>` | Harvest resources from your tile |

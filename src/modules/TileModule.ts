@@ -64,6 +64,20 @@ export class TileModule {
     return tile.isOwned
   }
 
+  // Read: a tile can be captured only if it is currently unowned.
+  async canCapture(x: number, y: number): Promise<boolean> {
+    const tile = await this.get(x, y)
+    return !tile.isOwned
+  }
+
+  // Read: a tile can be attacked if it is owned by someone else.
+  // Pass `self` (your address) to exclude tiles you already own.
+  async canAttack(x: number, y: number, self?: string): Promise<boolean> {
+    const tile = await this.get(x, y)
+    if (!tile.isOwned) return false
+    return self ? tile.owner !== self : true
+  }
+
   // Write: capture an unowned tile
   async capture(x: number, y: number): Promise<TxResult> {
     this.validateCoords(x, y)
