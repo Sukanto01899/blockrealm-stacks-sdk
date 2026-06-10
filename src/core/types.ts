@@ -16,6 +16,11 @@ export interface Tile {
   isOwned: boolean // convenience: owner !== ''
 }
 
+export interface RegionTile extends Tile {
+  x: number
+  y: number
+}
+
 export interface PlayerStats {
   tileCount: number
   totalResources: bigint

@@ -15,6 +15,7 @@ export type {
   GridWarConfig,
   StacksNetwork,
   Tile,
+  RegionTile,
   TileCoords,
   PlayerStats,
   TxResult,

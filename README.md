@@ -32,6 +32,10 @@ const sdk = new GridWarSDK({
 const tile = await sdk.tiles.get(5, 10)
 console.log(tile.owner, tile.level, tile.resources, tile.isOwned)
 
+// Batch-read a viewport for rendering the board:
+const region = await sdk.tiles.getRegion(0, 0, 9, 9) // 10x10, each tile has x/y
+region.forEach((t) => console.log(t.x, t.y, t.isOwned))
+
 const stats = await sdk.player.getStats('ST2PLAYER...')
 console.log(stats.tileCount, stats.totalResources)
 
@@ -56,6 +60,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | Method | Returns | Description |
 | --- | --- | --- |
 | `get(x, y)` | `Promise<Tile>` | Full tile data at `(x, y)` |
+| `getRegion(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | Every tile in the rectangle, each tagged with `x`/`y` |
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
 | `capture(x, y)` | `Promise<TxResult>` | Capture an unowned tile |

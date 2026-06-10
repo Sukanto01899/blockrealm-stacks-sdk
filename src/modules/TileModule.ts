@@ -1,7 +1,7 @@
 import { uintCV } from '@stacks/transactions'
 import type { ReadClient } from '../client/ReadClient'
 import type { WriteClient } from '../client/WriteClient'
-import type { Tile, TxResult, GridWarConfig } from '../core/types'
+import type { Tile, RegionTile, TxResult, GridWarConfig } from '../core/types'
 import { GridWarError, GridWarErrorCode } from '../core/errors'
 import { MAP_SIZE, CAPTURE_COST_MICROSTX, DEFAULT_CONTRACT_NAMES } from '../core/constants'
 
@@ -28,6 +28,28 @@ export class TileModule {
       [uintCV(x), uintCV(y)]
     )
     return this.parseTile(result)
+  }
+
+  // Read: get every tile in the rectangle (x1,y1)-(x2,y2), inclusive.
+  // Corners may be given in any order. Each result carries its (x, y).
+  async getRegion(x1: number, y1: number, x2: number, y2: number): Promise<RegionTile[]> {
+    const minX = Math.min(x1, x2)
+    const maxX = Math.max(x1, x2)
+    const minY = Math.min(y1, y2)
+    const maxY = Math.max(y1, y2)
+    this.validateCoords(minX, minY)
+    this.validateCoords(maxX, maxY)
+
+    const coords: { x: number; y: number }[] = []
+    for (let y = minY; y <= maxY; y++) {
+      for (let x = minX; x <= maxX; x++) {
+        coords.push({ x, y })
+      }
+    }
+
+    return Promise.all(
+      coords.map(async ({ x, y }) => ({ ...(await this.get(x, y)), x, y }))
+    )
   }
 
   // Read: get tile owner address
