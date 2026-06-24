@@ -22,6 +22,7 @@ export enum GridWarErrorCode {
   CONTRACT_CALL_FAILED = 'CONTRACT_CALL_FAILED',
   USER_CANCELLED = 'USER_CANCELLED',
   NETWORK_ERROR = 'NETWORK_ERROR',
+  TX_TIMEOUT = 'TX_TIMEOUT',
 }
 
 // Map contract error codes (uint) to GridWarErrorCode

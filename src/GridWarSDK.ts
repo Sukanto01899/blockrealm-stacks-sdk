@@ -3,8 +3,16 @@ import { WriteClient } from './client/WriteClient'
 import { TileModule } from './modules/TileModule'
 import { PlayerModule } from './modules/PlayerModule'
 import { LeaderboardModule } from './modules/LeaderboardModule'
-import type { GridWarConfig, GameEvent, GameEventType, GameEventHandler } from './core/types'
-import { DEFAULT_CONTRACT_NAMES } from './core/constants'
+import type {
+  GridWarConfig,
+  GameEvent,
+  GameEventType,
+  GameEventHandler,
+  TxConfirmation,
+  TxConfirmationStatus,
+} from './core/types'
+import { DEFAULT_CONTRACT_NAMES, HIRO_API_URLS } from './core/constants'
+import { GridWarError, GridWarErrorCode } from './core/errors'
 
 export class GridWarSDK {
   public readonly tiles: TileModule
@@ -61,6 +69,41 @@ export class GridWarSDK {
 
   off(eventType: GameEventType): void {
     this.eventListeners.delete(eventType)
+  }
+
+  // Polls the Stacks API until `txId` confirms (success or abort) or the
+  // timeout elapses. Saves callers from writing their own confirmation loop
+  // after `capture()` / `attack()` / `harvest()` / `upgrade()`.
+  async waitForTx(
+    txId: string,
+    options: { intervalMs?: number; timeoutMs?: number } = {}
+  ): Promise<TxConfirmation> {
+    const intervalMs = options.intervalMs ?? 3000
+    const timeoutMs = options.timeoutMs ?? 60_000
+    const baseUrl = HIRO_API_URLS[this.config.network]
+    const deadline = Date.now() + timeoutMs
+
+    while (true) {
+      const res = await fetch(`${baseUrl}/extended/v1/tx/${txId}`)
+      if (res.ok) {
+        const data = await res.json()
+        if (data.tx_status && data.tx_status !== 'pending') {
+          return {
+            txId,
+            status: data.tx_status as TxConfirmationStatus,
+            blockHeight: data.block_height,
+          }
+        }
+      }
+
+      if (Date.now() >= deadline) {
+        throw new GridWarError(
+          GridWarErrorCode.TX_TIMEOUT,
+          `Timed out waiting for tx ${txId} to confirm after ${timeoutMs}ms`
+        )
+      }
+      await new Promise((r) => setTimeout(r, intervalMs))
+    }
   }
 
   // Utility

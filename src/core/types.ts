@@ -56,6 +56,17 @@ export interface AttackResult extends TxResult {
   // tx is submitted — result known after confirmation
 }
 
+export type TxConfirmationStatus =
+  | 'success'
+  | 'abort_by_response'
+  | 'abort_by_post_condition'
+
+export interface TxConfirmation {
+  txId: string
+  status: TxConfirmationStatus
+  blockHeight?: number
+}
+
 export type GameEvent =
   | { type: 'tile:captured'; tileId: number; owner: string; x: number; y: number }
   | { type: 'tile:attacked'; tileId: number; attacker: string; defender: string; success: boolean }

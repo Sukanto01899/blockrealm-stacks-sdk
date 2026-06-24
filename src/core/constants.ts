@@ -15,6 +15,11 @@ export const EXPLORER_URLS = {
   mainnet: 'https://explorer.hiro.so',
 } as const
 
+export const HIRO_API_URLS = {
+  testnet: 'https://api.testnet.hiro.so',
+  mainnet: 'https://api.hiro.so',
+} as const
+
 export function getExplorerTxUrl(txId: string, network: 'testnet' | 'mainnet'): string {
   const chain = network === 'testnet' ? '?chain=testnet' : ''
   return `${EXPLORER_URLS[network]}/txid/${txId}${chain}`

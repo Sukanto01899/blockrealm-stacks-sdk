@@ -46,6 +46,10 @@ console.log('Captured! Track:', cap.explorerUrl)
 await sdk.tiles.attack(3, 7)
 await sdk.leaderboard.register()
 
+// Wait for a submitted tx to confirm (or throw on timeout):
+const confirmed = await sdk.waitForTx(cap.txId)
+console.log(confirmed.status, confirmed.blockHeight)
+
 // --- Events ---
 const unsubscribe = sdk.on('tile:captured', (e) => {
   console.log(`Tile ${e.tileId} captured by ${e.owner} at (${e.x}, ${e.y})`)
@@ -109,6 +113,17 @@ sdk.off(type)
 
 Event types: `tile:captured`, `tile:attacked`, `tile:harvested`, `tile:upgraded`,
 `player:registered`, `score:submitted`, `epoch:ended`.
+
+### Waiting for confirmation
+
+```ts
+sdk.waitForTx(txId, { intervalMs?, timeoutMs? }) // Promise<TxConfirmation>
+```
+
+Polls the Stacks API every `intervalMs` (default `3000`) until the tx leaves
+`pending` (`success`, `abort_by_response`, or `abort_by_post_condition`), or
+throws a `GridWarError` with code `TX_TIMEOUT` after `timeoutMs` (default
+`60000`).
 
 ## Error Handling
 
