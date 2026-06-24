@@ -46,6 +46,15 @@ export class GridWarSDK {
     }
   }
 
+  // Like `on`, but auto-unsubscribes after the first matching event.
+  once<T extends GameEvent>(eventType: T['type'], handler: GameEventHandler<T>): () => void {
+    const unsubscribe = this.on(eventType, (event: T) => {
+      unsubscribe()
+      handler(event)
+    })
+    return unsubscribe
+  }
+
   emit<T extends GameEvent>(event: T): void {
     this.eventListeners.get(event.type)?.forEach((handler) => handler(event))
   }

@@ -61,6 +61,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | --- | --- | --- |
 | `get(x, y)` | `Promise<Tile>` | Full tile data at `(x, y)` |
 | `getRegion(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | Every tile in the rectangle, each tagged with `x`/`y` |
+| `getMany(coords)` | `Promise<RegionTile[]>` | Fetch an arbitrary list of `{x, y}` tiles in one call, each tagged with `x`/`y` |
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
 | `canCapture(x, y)` | `Promise<boolean>` | Whether the tile is capturable (unowned) |
@@ -101,6 +102,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 
 ```ts
 sdk.on(type, handler) // returns an unsubscribe function
+sdk.once(type, handler) // like `on`, but auto-unsubscribes after the first event
 sdk.emit(event)
 sdk.off(type)
 ```

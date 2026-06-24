@@ -52,6 +52,16 @@ export class TileModule {
     )
   }
 
+  // Read: fetch an arbitrary list of tiles (not necessarily a rectangle).
+  // Each result carries its (x, y). Use this over `getRegion` when you
+  // already know exactly which tiles you need, to avoid over-fetching.
+  async getMany(coords: { x: number; y: number }[]): Promise<RegionTile[]> {
+    coords.forEach(({ x, y }) => this.validateCoords(x, y))
+    return Promise.all(
+      coords.map(async ({ x, y }) => ({ ...(await this.get(x, y)), x, y }))
+    )
+  }
+
   // Read: get tile owner address
   async getOwner(x: number, y: number): Promise<string> {
     const tile = await this.get(x, y)
