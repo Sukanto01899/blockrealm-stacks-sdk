@@ -29,6 +29,13 @@ export class PlayerModule {
     }
   }
 
+  // Read: batch-fetch stats for multiple players in one call, mirroring
+  // `tiles.getMany()` — saves callers from N sequential getStats() calls
+  // when building a leaderboard or roster view.
+  async getManyStats(addresses: string[]): Promise<PlayerStats[]> {
+    return Promise.all(addresses.map((address) => this.getStats(address)))
+  }
+
   async getTileCount(address: string): Promise<number> {
     const stats = await this.getStats(address)
     return stats.tileCount
