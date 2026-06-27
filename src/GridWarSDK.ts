@@ -41,6 +41,21 @@ export class GridWarSDK {
     this.leaderboard = new LeaderboardModule(this.readClient, this.writeClient, this.config)
   }
 
+  // Shortcuts for `new GridWarSDK({ network: 'testnet'/'mainnet', contractAddress, ...rest })`.
+  static testnet(
+    contractAddress: string,
+    rest?: Omit<GridWarConfig, 'network' | 'contractAddress'>
+  ): GridWarSDK {
+    return new GridWarSDK({ network: 'testnet', contractAddress, ...rest })
+  }
+
+  static mainnet(
+    contractAddress: string,
+    rest?: Omit<GridWarConfig, 'network' | 'contractAddress'>
+  ): GridWarSDK {
+    return new GridWarSDK({ network: 'mainnet', contractAddress, ...rest })
+  }
+
   // Event system
   on<T extends GameEvent>(eventType: T['type'], handler: GameEventHandler<T>): () => void {
     if (!this.eventListeners.has(eventType)) {

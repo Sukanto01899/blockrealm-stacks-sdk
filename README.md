@@ -28,6 +28,10 @@ const sdk = new GridWarSDK({
   // gameEngineName: 'game-engine',
 })
 
+// Shortcuts for the line above:
+// const sdk = GridWarSDK.testnet('ST1ABC...XYZ')
+// const sdk = GridWarSDK.mainnet('SP1ABC...XYZ', { tileRegistryName: 'tile-registry-v2' })
+
 // --- Reads (no wallet needed) ---
 const tile = await sdk.tiles.get(5, 10)
 console.log(tile.owner, tile.level, tile.resources, tile.isOwned)

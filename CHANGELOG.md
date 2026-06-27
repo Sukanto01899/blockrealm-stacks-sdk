@@ -7,6 +7,7 @@
 - `sdk.waitForTx(txId)` — poll the Stacks API until a tx confirms or times out
 - `sdk.player.getManyStats(addresses)` — batch-fetch stats for multiple players
 - `sdk.tiles.calculateCaptureCost()` — for symmetry with calculateAttackCost/calculateUpgradeCost
+- `GridWarSDK.testnet(contractAddress)` / `GridWarSDK.mainnet(contractAddress)` — static factory shortcuts
 
 ## [0.1.0] - Initial Release
 
