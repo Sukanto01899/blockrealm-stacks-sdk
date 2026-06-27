@@ -74,6 +74,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `attack(x, y)` | `Promise<TxResult>` | Attack an enemy tile |
 | `harvest(x, y)` | `Promise<TxResult>` | Harvest resources from your tile |
 | `upgrade(x, y)` | `Promise<TxResult>` | Upgrade your tile (max level 5) |
+| `calculateCaptureCost()` | `bigint` | Capture cost in microSTX (flat) |
 | `calculateAttackCost(level)` | `bigint` | Attack cost in microSTX |
 | `calculateUpgradeCost(level)` | `bigint` | Upgrade cost in microSTX |
 | `calculateHarvestAmount(level, blocks)` | `bigint` | Harvestable amount for elapsed blocks |

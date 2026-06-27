@@ -136,6 +136,13 @@ export class TileModule {
   }
 
   // Calculate costs
+  // For symmetry with calculateAttackCost/calculateUpgradeCost — capturing an
+  // unowned tile is a flat cost, but this saves consumers from importing
+  // CAPTURE_COST_MICROSTX separately.
+  calculateCaptureCost(): bigint {
+    return CAPTURE_COST_MICROSTX
+  }
+
   calculateAttackCost(level: number): bigint {
     return CAPTURE_COST_MICROSTX * BigInt(level)
   }

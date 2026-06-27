@@ -6,6 +6,7 @@
 - `sdk.tiles.getMany(coords)` — batch-fetch an arbitrary list of tiles
 - `sdk.waitForTx(txId)` — poll the Stacks API until a tx confirms or times out
 - `sdk.player.getManyStats(addresses)` — batch-fetch stats for multiple players
+- `sdk.tiles.calculateCaptureCost()` — for symmetry with calculateAttackCost/calculateUpgradeCost
 
 ## [0.1.0] - Initial Release
 
