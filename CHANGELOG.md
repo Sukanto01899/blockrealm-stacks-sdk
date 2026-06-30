@@ -8,6 +8,8 @@
 - `sdk.player.getManyStats(addresses)` — batch-fetch stats for multiple players
 - `sdk.tiles.calculateCaptureCost()` — for symmetry with calculateAttackCost/calculateUpgradeCost
 - `GridWarSDK.testnet(contractAddress)` / `GridWarSDK.mainnet(contractAddress)` — static factory shortcuts
+- `GridWarSDK.isTxFinal(status)` — static helper for checking a raw tx_status outside of waitForTx
+- `sdk.tiles.getNeighbors(x, y)` — fetch up to 4 adjacent tiles; map edges silently omitted
 
 ## [0.1.0] - Initial Release
 

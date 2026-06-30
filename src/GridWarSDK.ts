@@ -56,6 +56,14 @@ export class GridWarSDK {
     return new GridWarSDK({ network: 'mainnet', contractAddress, ...rest })
   }
 
+  // Whether a raw Stacks tx_status (from your own polling/websocket) is
+  // terminal — i.e. anything other than 'pending'. Covers 'success',
+  // 'abort_by_response', 'abort_by_post_condition', and the 'dropped_*'
+  // statuses, without consumers needing to enumerate them all.
+  static isTxFinal(status: string): boolean {
+    return status !== 'pending'
+  }
+
   // Event system
   on<T extends GameEvent>(eventType: T['type'], handler: GameEventHandler<T>): () => void {
     if (!this.eventListeners.has(eventType)) {
@@ -102,7 +110,7 @@ export class GridWarSDK {
       const res = await fetch(`${baseUrl}/extended/v1/tx/${txId}`)
       if (res.ok) {
         const data = await res.json()
-        if (data.tx_status && data.tx_status !== 'pending') {
+        if (data.tx_status && GridWarSDK.isTxFinal(data.tx_status)) {
           return {
             txId,
             status: data.tx_status as TxConfirmationStatus,

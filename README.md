@@ -70,6 +70,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `get(x, y)` | `Promise<Tile>` | Full tile data at `(x, y)` |
 | `getRegion(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | Every tile in the rectangle, each tagged with `x`/`y` |
 | `getMany(coords)` | `Promise<RegionTile[]>` | Fetch an arbitrary list of `{x, y}` tiles in one call, each tagged with `x`/`y` |
+| `getNeighbors(x, y)` | `Promise<RegionTile[]>` | Fetch the up-to-4 adjacent tiles; edge/corner tiles silently return fewer results |
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
 | `canCapture(x, y)` | `Promise<boolean>` | Whether the tile is capturable (unowned) |
@@ -130,6 +131,15 @@ Polls the Stacks API every `intervalMs` (default `3000`) until the tx leaves
 `pending` (`success`, `abort_by_response`, or `abort_by_post_condition`), or
 throws a `GridWarError` with code `TX_TIMEOUT` after `timeoutMs` (default
 `60000`).
+
+If you're tracking tx status yourself (e.g. via your own polling or a
+websocket) instead of using `waitForTx`, `GridWarSDK.isTxFinal(status)` tells
+you whether a raw Stacks `tx_status` string is terminal (anything other than
+`'pending'`, including the `dropped_*` statuses) without enumerating them all:
+
+```ts
+if (GridWarSDK.isTxFinal(status)) { /* done polling */ }
+```
 
 ## Error Handling
 

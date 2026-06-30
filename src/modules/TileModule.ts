@@ -52,6 +52,23 @@ export class TileModule {
     )
   }
 
+  // Read: fetch the (up to 4) tiles directly adjacent to (x, y).
+  // Out-of-bounds neighbors (map edges) are silently omitted rather than
+  // throwing, so callers never need to special-case corner/edge tiles.
+  async getNeighbors(x: number, y: number): Promise<RegionTile[]> {
+    this.validateCoords(x, y)
+    const candidates = [
+      { x, y: y - 1 },
+      { x, y: y + 1 },
+      { x: x - 1, y },
+      { x: x + 1, y },
+    ]
+    const valid = candidates.filter(
+      (c) => c.x >= 0 && c.y >= 0 && c.x < MAP_SIZE && c.y < MAP_SIZE
+    )
+    return this.getMany(valid)
+  }
+
   // Read: fetch an arbitrary list of tiles (not necessarily a rectangle).
   // Each result carries its (x, y). Use this over `getRegion` when you
   // already know exactly which tiles you need, to avoid over-fetching.
