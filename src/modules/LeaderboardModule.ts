@@ -2,7 +2,7 @@ import { principalCV, uintCV } from '@stacks/transactions'
 import type { ReadClient } from '../client/ReadClient'
 import type { WriteClient } from '../client/WriteClient'
 import type { EpochWinner, PlayerEpochScore, TxResult, GridWarConfig } from '../core/types'
-import { DEFAULT_CONTRACT_NAMES } from '../core/constants'
+import { DEFAULT_CONTRACT_NAMES, STACKS_BLOCK_TIME_MS } from '../core/constants'
 
 export class LeaderboardModule {
   private contractAddress: string
@@ -97,6 +97,14 @@ export class LeaderboardModule {
       []
     )
     return Number(result ?? 0)
+  }
+
+  // Read: estimated wall-clock time until the epoch ends, based on
+  // getEpochBlocksRemaining() × STACKS_BLOCK_TIME_MS (~10 min/block).
+  // Returns both raw blocks and estimatedMs so callers can display either.
+  async getEpochTimeRemaining(): Promise<{ blocks: number; estimatedMs: number }> {
+    const blocks = await this.getEpochBlocksRemaining()
+    return { blocks, estimatedMs: blocks * STACKS_BLOCK_TIME_MS }
   }
 
   // Read: check if player is registered

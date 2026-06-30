@@ -107,6 +107,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getEpochWinner(epoch)` | `Promise<EpochWinner \| null>` | Winners of a past epoch |
 | `getPlayerScore(address, epoch)` | `Promise<PlayerEpochScore \| null>` | A player's score for an epoch |
 | `getEpochBlocksRemaining()` | `Promise<number>` | Blocks left until the epoch ends |
+| `getEpochTimeRemaining()` | `Promise<{ blocks: number; estimatedMs: number }>` | Blocks + estimated wall-clock ms remaining (Stacks ~10 min/block) |
 | `isRegistered(address)` | `Promise<boolean>` | Whether an address is registered |
 
 ### Events

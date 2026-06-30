@@ -2,6 +2,10 @@ export const MAP_SIZE = 100
 export const MAX_LEVEL = 5
 export const CAPTURE_COST_MICROSTX = 1_000_000n // 1 STX
 export const HARVEST_INTERVAL_BLOCKS = 10
+
+// Stacks blocks land roughly every 10 minutes — used to convert a block
+// count into an estimated wall-clock duration without extra API calls.
+export const STACKS_BLOCK_TIME_MS = 10 * 60 * 1000
 export const RESOURCE_PER_PERIOD = 10
 export const UPGRADE_BASE_COST_MICROSTX = 2_000_000n // 2 STX
 
