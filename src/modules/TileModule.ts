@@ -52,6 +52,13 @@ export class TileModule {
     )
   }
 
+  // Read: scan a rectangle and return only unowned (capturable) tiles.
+  // Useful for "show me everything I can capture in this area" UIs.
+  async findCapturable(x1: number, y1: number, x2: number, y2: number): Promise<RegionTile[]> {
+    const region = await this.getRegion(x1, y1, x2, y2)
+    return region.filter((tile) => !tile.isOwned)
+  }
+
   // Read: fetch the (up to 4) tiles directly adjacent to (x, y).
   // Out-of-bounds neighbors (map edges) are silently omitted rather than
   // throwing, so callers never need to special-case corner/edge tiles.

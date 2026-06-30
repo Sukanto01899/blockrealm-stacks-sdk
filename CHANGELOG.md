@@ -12,6 +12,7 @@
 - `sdk.tiles.getNeighbors(x, y)` — fetch up to 4 adjacent tiles; map edges silently omitted
 - `sdk.leaderboard.getEpochTimeRemaining()` — estimated wall-clock duration until epoch ends
 - `sdk.leaderboard.isEpochEnded()` — boolean convenience wrapper over getEpochBlocksRemaining
+- `sdk.tiles.findCapturable(x1, y1, x2, y2)` — filter a region down to only unowned tiles
 
 ## [0.1.0] - Initial Release
 

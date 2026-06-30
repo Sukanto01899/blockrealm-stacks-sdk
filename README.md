@@ -71,6 +71,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getRegion(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | Every tile in the rectangle, each tagged with `x`/`y` |
 | `getMany(coords)` | `Promise<RegionTile[]>` | Fetch an arbitrary list of `{x, y}` tiles in one call, each tagged with `x`/`y` |
 | `getNeighbors(x, y)` | `Promise<RegionTile[]>` | Fetch the up-to-4 adjacent tiles; edge/corner tiles silently return fewer results |
+| `findCapturable(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | All unowned tiles in a rectangle — everything a player can currently capture |
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
 | `canCapture(x, y)` | `Promise<boolean>` | Whether the tile is capturable (unowned) |
