@@ -108,6 +108,7 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getPlayerScore(address, epoch)` | `Promise<PlayerEpochScore \| null>` | A player's score for an epoch |
 | `getEpochBlocksRemaining()` | `Promise<number>` | Blocks left until the epoch ends |
 | `getEpochTimeRemaining()` | `Promise<{ blocks: number; estimatedMs: number }>` | Blocks + estimated wall-clock ms remaining (Stacks ~10 min/block) |
+| `isEpochEnded()` | `Promise<boolean>` | Whether the current epoch has ended (blocks remaining === 0) |
 | `isRegistered(address)` | `Promise<boolean>` | Whether an address is registered |
 
 ### Events

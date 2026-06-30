@@ -107,6 +107,12 @@ export class LeaderboardModule {
     return { blocks, estimatedMs: blocks * STACKS_BLOCK_TIME_MS }
   }
 
+  // Read: whether the current epoch has ended (blocks remaining === 0).
+  // Saves callers from fetching the raw count just to compare against zero.
+  async isEpochEnded(): Promise<boolean> {
+    return (await this.getEpochBlocksRemaining()) === 0
+  }
+
   // Read: check if player is registered
   async isRegistered(address: string): Promise<boolean> {
     const result = await this.read.call(
