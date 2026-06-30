@@ -72,6 +72,12 @@ const unsubscribe = sdk.on('tile:captured', (e) => {
 | `getMany(coords)` | `Promise<RegionTile[]>` | Fetch an arbitrary list of `{x, y}` tiles in one call, each tagged with `x`/`y` |
 | `getNeighbors(x, y)` | `Promise<RegionTile[]>` | Fetch the up-to-4 adjacent tiles; edge/corner tiles silently return fewer results |
 | `findCapturable(x1, y1, x2, y2)` | `Promise<RegionTile[]>` | All unowned tiles in a rectangle — everything a player can currently capture |
+
+### Version
+
+```ts
+GridWarSDK.version // e.g. "0.1.0" — read from package.json at build time
+```
 | `getOwner(x, y)` | `Promise<string>` | Owner principal (`''` if unowned) |
 | `isOwned(x, y)` | `Promise<boolean>` | Whether the tile is owned |
 | `canCapture(x, y)` | `Promise<boolean>` | Whether the tile is capturable (unowned) |

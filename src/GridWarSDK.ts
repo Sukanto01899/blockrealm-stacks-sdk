@@ -1,3 +1,4 @@
+import pkg from '../../package.json'
 import { ReadClient } from './client/ReadClient'
 import { WriteClient } from './client/WriteClient'
 import { TileModule } from './modules/TileModule'
@@ -40,6 +41,8 @@ export class GridWarSDK {
     this.player = new PlayerModule(this.readClient, this.config)
     this.leaderboard = new LeaderboardModule(this.readClient, this.writeClient, this.config)
   }
+
+  static readonly version: string = pkg.version
 
   // Shortcuts for `new GridWarSDK({ network: 'testnet'/'mainnet', contractAddress, ...rest })`.
   static testnet(
